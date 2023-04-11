@@ -1,5 +1,5 @@
 module-name:
-    example_kb_sdk_app
+    efi_family_app
 
 module-description:
     A KBase module

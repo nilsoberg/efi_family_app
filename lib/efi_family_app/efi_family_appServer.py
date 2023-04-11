@@ -17,7 +17,7 @@ from jsonrpcbase import JSONRPCService, InvalidParamsError, KeywordError, \
 from jsonrpcbase import ServerError as JSONServerError
 
 from biokbase import log
-from example_kb_sdk_app.authclient import KBaseAuth as _KBaseAuth
+from efi_family_app.authclient import KBaseAuth as _KBaseAuth
 
 try:
     from ConfigParser import ConfigParser
@@ -45,14 +45,14 @@ def get_config():
     retconfig = {}
     config = ConfigParser()
     config.read(get_config_file())
-    for nameval in config.items(get_service_name() or 'example_kb_sdk_app'):
+    for nameval in config.items(get_service_name() or 'efi_family_app'):
         retconfig[nameval[0]] = nameval[1]
     return retconfig
 
 config = get_config()
 
-from example_kb_sdk_app.example_kb_sdk_appImpl import example_kb_sdk_app  # noqa @IgnorePep8
-impl_example_kb_sdk_app = example_kb_sdk_app(config)
+from efi_family_app.efi_family_appImpl import efi_family_app  # noqa @IgnorePep8
+impl_efi_family_app = efi_family_app(config)
 
 
 class JSONObjectEncoder(json.JSONEncoder):
@@ -327,7 +327,7 @@ class Application(object):
                                    context['method'], context['call_id'])
 
     def __init__(self):
-        submod = get_service_name() or 'example_kb_sdk_app'
+        submod = get_service_name() or 'efi_family_app'
         self.userlog = log.log(
             submod, ip_address=True, authuser=True, module=True, method=True,
             call_id=True, changecallback=self.logcallback,
@@ -338,12 +338,12 @@ class Application(object):
         self.serverlog.set_log_level(6)
         self.rpc_service = JSONRPCServiceCustom()
         self.method_authentication = dict()
-        self.rpc_service.add(impl_example_kb_sdk_app.run_example_kb_sdk_app,
-                             name='example_kb_sdk_app.run_example_kb_sdk_app',
+        self.rpc_service.add(impl_efi_family_app.run_efi_family_app,
+                             name='efi_family_app.run_efi_family_app',
                              types=[dict])
-        self.method_authentication['example_kb_sdk_app.run_example_kb_sdk_app'] = 'required'  # noqa
-        self.rpc_service.add(impl_example_kb_sdk_app.status,
-                             name='example_kb_sdk_app.status',
+        self.method_authentication['efi_family_app.run_efi_family_app'] = 'required'  # noqa
+        self.rpc_service.add(impl_efi_family_app.status,
+                             name='efi_family_app.status',
                              types=[dict])
         authurl = config.get(AUTH) if config else None
         self.auth_client = _KBaseAuth(authurl)
@@ -398,7 +398,7 @@ class Application(object):
                             err = JSONServerError()
                             err.data = (
                                 'Authentication required for ' +
-                                'example_kb_sdk_app ' +
+                                'efi_family_app ' +
                                 'but no authentication header was passed')
                             raise err
                         elif token is None and auth_req == 'optional':
