@@ -73,8 +73,8 @@ class efi_family_appTest(unittest.TestCase):
             self.ctx,
             {
                 "workspace_name": self.wsName,
-                "reads_ref": "58783/4/1",
-                "output_name": "ReadsOutputName",
+                "reads_ref": "70257/2/1",
+                "output_name": "EfiFamilyApp",
             },
         )
         # next steps:

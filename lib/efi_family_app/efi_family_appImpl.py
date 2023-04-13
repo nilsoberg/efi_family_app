@@ -5,8 +5,9 @@ import os
 
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.ReadsUtilsClient import ReadsUtils
-from .utils import ExampleReadsApp
 from base import Core
+
+from .est_util import EstJob
 
 
 #END_HEADER
@@ -61,13 +62,23 @@ class efi_family_app:
             shared_folder=self.shared_folder,
             clients=dict(
                 KBaseReport=KBaseReport,
-                ReadsUtils=ReadsUtils
             ),
         )
-        # Download Reads
 
-        era = ExampleReadsApp(ctx, config=config)
-        output = era.do_analysis(params)
+        #TODO:
+        config['est_home'] = ''
+        create_args = dict()
+
+        job = EstJob(ctx, config)
+
+        job.create_job(create_args)
+
+        job.start_job()
+
+        output = job.generate_report()
+
+        #era = ExampleReadsApp(ctx, config=config)
+        #output = era.do_analysis(params)
 
         #END run_efi_family_app
 
