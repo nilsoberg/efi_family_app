@@ -5,14 +5,16 @@ import os
 import subprocess
 import uuid
 import json
+import shutil
 
 # This is the SFA base package which provides the Core app class.
 from base import Core
 
 
+MODULE_DIR = "/kb/module"
+TEMPLATES_DIR = os.path.join(MODULE_DIR, "lib/templates")
 
 
-@staticmethod
 def get_streams(process):
     """
     Returns decoded stdout,stderr after loading the entire thing into memory
@@ -23,12 +25,19 @@ def get_streams(process):
 
 class EstJob(Core):
 
-    def __init__(self, ctx, config):
+    def __init__(self, ctx, config, clients_class=None):
+        super().__init__(ctx, config, clients_class)
         # self.shared_folder is defined in the Core App class.
-        self.output_dir = os.path.join(self.shared_folder, 'job_temp', str(uuid.uuid4()))
+        self.output_dir = os.path.join(self.shared_folder, 'job_temp')
         self._mkdir_p(self.output_dir)
         self.script_file = ''
         self.est_dir = config.get('est_home')
+        self.efi_db_config = config.get('efi_db_config')
+        self.report = self.clients.KBaseReport
+        if self.efi_db_config == None:
+            self.efi_db_config = '/apps/EFIShared/db_conf.sh'
+        #TODO: make a more robust way of doing this
+        self.est_env = ['/apps/EST/env_conf.sh', '/apps/EFIShared/env_conf.sh', '/apps/env.sh', '/apps/blast_legacy.sh', self.efi_db_config]
 
 
 
@@ -38,13 +47,14 @@ class EstJob(Core):
 
         process_args = [create_job_pl, '--job-dir', self.output_dir]
         if params.get('job_id') != None:
-            process_args.append('--job-id', params['job_id'])
+            process_args.extend(['--job-id', params['job_id']])
 
         process_params = {'type': 'generate'}
         if params.get('family') != None:
             process_params['family'] = params['family']
         json_str = json.dumps(process_params)
-        process_args.append('--params', json_str)
+        process_args.extend(['--params', "'"+json_str+"'"])
+        process_args.extend(['--env-scripts', ','.join(self.est_env)])
 
         process = subprocess.Popen(
             process_args,
@@ -57,6 +67,10 @@ class EstJob(Core):
             script_file = stdout.strip()
         else:
             return None
+
+        print("### OUTPUT FROM CREATE JOB ####################################################################################\n")
+        print(str(stdout) + "\n---------\n")
+        print(str(stderr) + "\n")
 
         self.script_file = script_file
 
@@ -80,53 +94,66 @@ class EstJob(Core):
 
         stdout, stderr = get_streams(process)
 
-        # Do something???
+        print("### OUTPUT FROM GENERATE ######################################################################################\n")
+        print(str(stdout) + "\n---------\n")
+        print(str(stderr) + "\n")
 
         return True
 
 
 
-    def generate_report(self, create_args, ca, sa):
+    def generate_report(self, params):
         #TODO:
         """
         This method is where to define the variables to pass to the report.
         """
         # This path is required to properly use the template.
         reports_path = os.path.join(self.shared_folder, "reports")
+        self._mkdir_p(reports_path)
         # Path to the Jinja template. The template can be adjusted to change
         # the report.
         template_path = os.path.join(TEMPLATES_DIR, "report.html")
-        # A sample multiplication table to use as output
-        table = [[i * j for j in range(10)] for i in range(10)]
-        headers = "one two three four five six seven eight nine ten".split(" ")
-        # A count of the base calls in the reads
-        count_df_html = params["count_df"].to_html()
-        # Calculate a correlation table determined by the quality scores of
-        # each base read. This requires pandas and matplotlib, and these are
-        # listed in requirements.txt. You can see the resulting HTML file after
-        # runing kb-sdk test in ./test_local/workdir/tmp/reports/index.html
-        scores_df_html = (
-            pd.DataFrame(params["scores"]).corr().style.background_gradient().render()
-        )
-        # The keys in this dictionary will be available as variables in the
-        # Jinja template. With the current configuration of the template
-        # engine, HTML output is allowed.
-        template_variables = dict(
-            count_df_html=count_df_html,
-            headers=headers,
-            scores_df_html=scores_df_html,
-            table=table,
-            upa=params["upa"],
-            output_value=params["output_value"],
-        )
+
+        length_histogram = "length_histogram_uniprot.png"
+        alignment_length = "alignment_length.png"
+        percent_identity = "percent_identity.png"
+
+        length_histogram_src = os.path.join(self.output_dir, "output", length_histogram)
+        alignment_length_src = os.path.join(self.output_dir, "output", alignment_length)
+        percent_identity_src = os.path.join(self.output_dir, "output", percent_identity)
+
+        length_histogram_out = os.path.join(reports_path, length_histogram)
+        alignment_length_out = os.path.join(reports_path, alignment_length)
+        percent_identity_out = os.path.join(reports_path, percent_identity)
+
+        length_histogram_rel = os.path.join("reports", length_histogram)
+        alignment_length_rel = os.path.join("reports", alignment_length)
+        percent_identity_rel = os.path.join("reports", percent_identity)
+
+        #print(os.listdir(self.output_dir + "/output"))
+
+        shutil.copyfile(length_histogram_src, length_histogram_out)
+        shutil.copyfile(alignment_length_src, alignment_length_out)
+        shutil.copyfile(percent_identity_src, percent_identity_out)
+
+        template_variables = {
+                'length_histogram_file': length_histogram_rel,
+                'alignment_length_file': alignment_length_rel,
+                'percent_identity_file': percent_identity_rel,
+                }
+
         # The KBaseReport configuration dictionary
         config = dict(
-            report_name=f"ExampleReadsApp_{str(uuid.uuid4())}",
-            reports_path=reports_path,
-            template_variables=template_variables,
-            workspace_name=params["workspace_name"],
+            report_name = f"EfiFamilyApp_{str(uuid.uuid4())}",
+            reports_path = reports_path,
+            template_variables = template_variables,
+            workspace_name = params["workspace_name"],
         )
-        return self.create_report_from_template(template_path, config)
+        
+        output_report = self.create_report_from_template(template_path, config)
+        print("OUTPUT REPORT\n")
+        print(str(output_report) + "\n")
+        return output_report
 
 
 

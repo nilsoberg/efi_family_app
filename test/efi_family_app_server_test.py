@@ -69,14 +69,25 @@ class efi_family_appTest(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
+
+        db_conf = "/apps/EFIShared/testing_db_conf.sh"
+        args = {'family': 'PF05544'}
         ret = self.serviceImpl.run_efi_family_app(
             self.ctx,
             {
                 "workspace_name": self.wsName,
                 "reads_ref": "70257/2/1",
                 "output_name": "EfiFamilyApp",
+                "est": args,
+                "efi_db_config": db_conf,
             },
         )
+
+        self.assertEqual(1, 1, "Fail")
+
         # next steps:
         # - download report
         # - assert that the report has expected contents
+
+        return True
+

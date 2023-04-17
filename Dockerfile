@@ -1,4 +1,4 @@
-FROM kbase/sdkpython:3.8.10
+FROM kbase/sdkpython:3.8.0
 
 ENV PIP_PROGRESS_BAR=off
 RUN apt-get -y update
@@ -97,32 +97,6 @@ RUN mkdir -p /data/job
 
 ARG RESETCONFIG=false
 
-RUN apt-get install 
-
-WORKDIR /apps
-#COPY EST /apps/EST
-#COPY GNT /apps/GNT
-#COPY EFIShared /apps/EFIShared
-#COPY EFITools /apps/EFITools
-RUN git clone --branch devel https://github.com/EnzymeFunctionInitiative/EST.git
-RUN git clone --branch devel https://github.com/EnzymeFunctionInitiative/GNT.git
-RUN git clone --branch master https://github.com/EnzymeFunctionInitiative/EFIShared.git
-RUN git clone https://github.com/EnzymeFunctionInitiative/EFITools.git
-
-# Configure EFI apps
-WORKDIR /apps
-RUN perl /apps/EFIShared/make_efi_config.pl --output /apps/efi.config --db-interface sqlite3
-RUN cp /apps/EST/env_conf.sh.example /apps/EST/env_conf.sh
-RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EST/env_conf.sh EFI_EST=/apps/EST EFI_CONFIG=/apps/efi.config
-RUN cp /apps/GNT/env_conf.sh.example /apps/GNT/env_conf.sh
-RUN perl /apps/EFIShared/edit_env_conf.pl /apps/GNT/env_conf.sh EFI_GNN=/apps/GNT
-RUN cp /apps/EFIShared/env_conf.sh.example /apps/EFIShared/env_conf.sh
-RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/env_conf.sh EFI_SHARED=/apps/EFIShared/lib EFI_GROUP_HOME=/apps/efi
-RUN cp /apps/shortbred/ShortBRED/env_conf.sh.example /apps/shortbred/ShortBRED/env_conf.sh
-RUN perl /apps/EFIShared/edit_env_conf.pl /apps/shortbred/ShortBRED/env_conf.sh SHORTBRED_APP_HOME=/apps/shortbred/sb_code SHORTBRED_DATA_HOME=/apps/shortbred/sb_data EFI_SHORTBRED_HOME=/apps/shortbred/ShortBRED
-RUN cp /apps/EFIShared/db_conf.sh.example /apps/EFIShared/db_conf.sh
-RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=/data/efi/0.1/seq_mapping.sqlite EFI_DB=/data/efi/0.1/metadata.sqlite EFI_DB_DIR=/data/efi/0.1/blastdb EFI_DIAMOND_DB_DIR=/data/efi/0.1/diamonddb EFI_FASTA_PATH=/data/efi/0.1/uniprot.fasta
-
 RUN apt-get install -y wget
 RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
 RUN apt-get update
@@ -134,10 +108,8 @@ RUN add-apt-repository -y ppa:c2d4u.team/c2d4u4.0+
 RUN apt-get update
 RUN apt-get install -y r-cran-hmisc
 
-# For EFI stand-alone
-#COPY entrypoint.sh /apps/entrypoint.sh
-#ENTRYPOINT [ "/bin/bash", "/apps/entrypoint.sh" ]
 
+### This is for KBase integration.  It can be commented out to run the EFI family app in standalone mode.
 WORKDIR /kb/module
 COPY ./requirements.txt /kb/module/requirements.txt
 ENV PIP_PROGRESS_BAR=off
@@ -148,7 +120,45 @@ COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
 RUN chmod -R a+rw /kb/module
 RUN make all
+RUN mkdir -p /data/efi/0.1
 
+
+# Configure EFI apps
+WORKDIR /apps
+#COPY EST /apps/EST
+#COPY GNT /apps/GNT
+#COPY EFIShared /apps/EFIShared
+#COPY EFITools /apps/EFITools
+RUN git clone --branch devel https://github.com/EnzymeFunctionInitiative/EST.git
+RUN git clone --branch devel https://github.com/EnzymeFunctionInitiative/GNT.git
+RUN git clone --branch master https://github.com/EnzymeFunctionInitiative/EFIShared.git
+RUN git clone https://github.com/EnzymeFunctionInitiative/EFITools.git
+
+RUN perl /apps/EFIShared/make_efi_config.pl --output /apps/efi.config --db-interface sqlite3
+RUN cp /apps/EST/env_conf.sh.example /apps/EST/env_conf.sh
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EST/env_conf.sh EFI_EST=/apps/EST EFI_CONFIG=/apps/efi.config
+RUN cp /apps/GNT/env_conf.sh.example /apps/GNT/env_conf.sh
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/GNT/env_conf.sh EFI_GNN=/apps/GNT
+RUN cp /apps/EFIShared/env_conf.sh.example /apps/EFIShared/env_conf.sh
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/env_conf.sh EFI_SHARED=/apps/EFIShared/lib EFI_GROUP_HOME=/apps/efi
+RUN cp /apps/shortbred/ShortBRED/env_conf.sh.example /apps/shortbred/ShortBRED/env_conf.sh
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/shortbred/ShortBRED/env_conf.sh SHORTBRED_APP_HOME=/apps/shortbred/sb_code SHORTBRED_DATA_HOME=/apps/shortbred/sb_data EFI_SHORTBRED_HOME=/apps/shortbred/ShortBRED
+RUN cp /apps/EFIShared/db_conf.sh.example /apps/EFIShared/db_conf.sh
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=/data/efi/0.1/seq_mapping.sqlite EFI_DB=/data/efi/0.1/metadata.sqlite EFI_DB_DIR=/data/efi/0.1/blastdb EFI_DIAMOND_DB_DIR=/data/efi/0.1/diamonddb EFI_FASTA_PATH=/data/efi/0.1/uniprot.fasta
+#RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=/kb/module/data/efi/0.1/seq_mapping.sqlite EFI_DB=/kb/module/data/efi/0.1/metadata.sqlite EFI_DB_DIR=/kb/module/data/efi/0.1/blastdb EFI_DIAMOND_DB_DIR=/kb/module/data/efi/0.1/diamonddb EFI_FASTA_PATH=/kb/module/data/efi/0.1/uniprot.fasta
+
+# This is for unit testing
+ARG TESTPATH=/kb/module/data/unit_test/0.1
+RUN cp /apps/EFIShared/db_conf.sh.example /apps/EFIShared/testing_db_conf.sh
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/testing_db_conf.sh EFI_SEQ_DB=$TESTPATH/seq_mapping.sqlite EFI_DB=$TESTPATH/metadata.sqlite EFI_DB_DIR=$TESTPATH/blastdb EFI_DIAMOND_DB_DIR=$TESTPATH/diamonddb EFI_FASTA_PATH=$TESTPATH/uniprot.fasta
+
+
+
+### For EFI stand-alone
+#COPY ./scripts/est_entrypoint.sh /apps/entrypoint.sh
+#ENTRYPOINT [ "/bin/bash", "/apps/entrypoint.sh" ]
+
+WORKDIR /kb/module
 ENTRYPOINT [ "./scripts/entrypoint.sh" ]
 
 CMD [ ]

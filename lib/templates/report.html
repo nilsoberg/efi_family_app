@@ -1,32 +1,37 @@
 <!doctype html>
 <html>
  <body>
-  <h1> The newly uploaded reads file upa {{ upa }}</h1>
+     <h1>EFI SSN Generate Step</h1>
 
-  <h1>Example tabular data</h1>
-  <table>
-  {% for row in table %}
-  {% if loop.first %}
-   <tr>
-   {% for header in headers %}
-    <th>{{ header }}</th>
-   {% endfor %}
-   </tr>
-  {% endif %}
-   <tr>
-   {% for cell in row %}
-    <td>{{ cell }}</td>
-   {% endfor %}
-   </tr>
-  {% endfor %}
-  </table>
-  <hr />
-  <h1>That one value you heard about</h1>
-  {{ output_value }}
-  <hr />
-  <h1>DataFrame of base call counts</h1>
-  {{ count_df_html }}
-  <h1>Correlations in qualities by index of base call within a read</h1>
-  {{ scores_df_html }}
+     <h2>Sequences as a Function of Full Length Histogram (First Step for Alignment Score Threshold Selection)</h2>
+     <a href="{{ length_histogram_file }}"><img src="{{ length_histogram_file }}" width="800" alt="Length Histogram" /></a>
+     <p>
+     This histogram describes the length distribution for all sequences (UniProt IDs) in the input dataset; the sequences in this histogram are used to calculate the edges.
+     </p>
+     <p>
+     Inspection of the histogram permits identification of fragments, single domain proteins, and multidomain fusion proteins. The dataset can be length-filtered using the Minimum and Maximum "Sequence Length Restrictions" in the "SSN Finalization" tab to remove fragments, select single domain proteins, or select multidomain fusion proteins. 
+     </p>
+
+     <h2>Alignment Length vs Alignment Score Box Plot (Second Step for Alignment Score Threshold Selection)</h2>
+     <a href="{{ alignment_length_file }}"><img src="{{ alignment_length_file }}" width="800" alt="Alignment Length" /></a>
+     <p>
+     This box plot describes the relationship between the query-subject alignment lengths used by BLAST (y-axis) to calculate the alignment scores (x-axis).
+     </p>
+     <p>
+     This plot shows a monophasic increase in alignment length to a constant value for single domain proteins; this plot shows multiphasic increases in alignment length for datasets with multidomain proteins (one phase for each fusion length). The value of the "Alignment Score Threshold" for generating the SSN (entered in the "SSN Finalization" tab) should be selected (from the "Percent Identity vs Alignment Score Box Plot"; next box plot) at an alignment length ≥ the minimum length of single domain proteins in the dataset (determined by inspection of the "Sequences as a Function of Full-Length Histogram"; previous histogram). In that region, the "Alignment Length" should be independent of the "Alignment Score".
+     </p>
+                                                 
+     <h2>Percent Identity vs Alignment Score Box Plot (Third Step for Alignment Score Threshold Selection)</h2>
+     <a href="{{ percent_identity_file }}"><img src="{{ percent_identity_file }}" width="800" alt="Percent Identity" /></a>
+     <p>
+     This box plot describes the pairwise percent sequence identity as a function of alignment score.
+     </p>
+     <p>
+     Complementing the "Alignment Length vs Alignment Score Box Plot" (previous box plot), this box plot describes a monophasic increase in sequence identity for single domain proteins or a multiphasic increase in sequence identity for datasets with multidomain proteins (one phase for each fusion length). In the "Alignment Length vs Alignment Score" box plot (previous box plot), a monophasic increase in sequence identity occurs as the alignment score increases at a constant alignment length; multiphasic increases occur as the alignment score increases at additional longer constant alignment lengths.
+     </p>
+     <p>
+     For the initial SSN, we recommend that an alignment score corresponding to 35 to 40% pairwise identity be entered in the "SSN Finalization" tab (for the first phase in multiphasic plots).
+     </p>
+
  </body>
 </html>

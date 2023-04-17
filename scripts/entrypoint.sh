@@ -21,7 +21,7 @@ elif [ "${1}" = "init" ] ; then
   efi_url=https://efi.igb.illinois.edu/downloads/databases/20230301_swissprot
   # This should point to a persistent directory that is mounted to the docker path
   if [ "${2}" = "" ]; then
-      data_dir="/data/efi/1.0"
+      data_dir="/data/efi/0.1"
   else
       data_dir=$2
   fi

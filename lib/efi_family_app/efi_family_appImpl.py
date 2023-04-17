@@ -65,9 +65,14 @@ class efi_family_app:
             ),
         )
 
-        #TODO:
-        config['est_home'] = ''
-        create_args = dict()
+        #TODO: make this a config variable
+        config['est_home'] = '/apps/EST'
+        est_args = params['est']
+        create_args = {'family': est_args['family']}
+
+        db_conf = params.get('efi_db_config')
+        if db_conf != None:
+            config['efi_db_config'] = db_conf
 
         job = EstJob(ctx, config)
 
@@ -75,7 +80,7 @@ class efi_family_app:
 
         job.start_job()
 
-        output = job.generate_report()
+        output = job.generate_report(params)
 
         #era = ExampleReadsApp(ctx, config=config)
         #output = era.do_analysis(params)
