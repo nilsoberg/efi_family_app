@@ -67,8 +67,9 @@ class efi_family_app:
 
         #TODO: make this a config variable
         config['est_home'] = '/apps/EST'
-        est_args = params['est']
-        create_args = {'family': est_args['family']}
+        family = params['family']
+        #est_args = params['est']
+        create_args = {'family': family}
 
         db_conf = params.get('efi_db_config')
         if db_conf != None:
