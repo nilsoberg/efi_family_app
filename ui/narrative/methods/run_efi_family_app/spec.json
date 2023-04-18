@@ -1,7 +1,7 @@
 {
-    "ver": "0.0.1",
+    "ver": "0.1.1",
     "authors": [
-        "dakotablair"
+        "nilsoberg"
     ],
     "contact": "",
     "categories": ["active"],
@@ -11,27 +11,12 @@
     },
     "parameters": [
         {
-            "id": "reads_ref",
+            "id": "family_name",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
             "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ "KBaseFile.SingleEndLibrary" ]
-            }
-        },
-        {
-            "id" : "output_name",
-            "optional" : false,
-            "advanced" : false,
-            "allow_multiple" : false,
-            "default_values" : [ "ReadsHead" ],
-            "field_type" : "text",
-            "text_options" : {
-              "valid_ws_types" : [ "KBaseFile.SingleEndLibrary" ],
-              "is_output_name":true
-             }
+            "field_type": "text"
         }
     ],
     "behavior": {
@@ -47,12 +32,8 @@
                     "narrative_system_variable": "workspace_id",
                     "target_property": "workspace_id"
                 },{
-                    "input_parameter": "reads_ref",
-                    "target_property": "reads_ref",
-                    "target_type_transform": "resolved-ref"
-                },{
-                    "input_parameter": "output_name",
-                    "target_property": "output_name"
+                    "input_parameter": "family_name",
+                    "target_property": "family_name"
                 }
             ],
             "output_mapping": [

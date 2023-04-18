@@ -1,10 +1,10 @@
 #
 # define display information
 #
-name: SFA Example App 1
+name: EFI Family Demo App
 
 tooltip: |
-    Take the top ten reads from a Single End reads object.
+    Test a core feature of the EFI apps.
 
 screenshots: []
 
@@ -24,20 +24,13 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    reads_ref :
+    family_name :
         ui-name : |
-            Reads
+            Family name
         short-hint : |
-            A Single End Reads object
+            Family name
         long-hint  : |
-            A Single End Reads object whose top ten reads you care about.
-    output_name:
-        ui-name : |
-            Output Name
-        short-hint : |
-            The name of the resulting object
-        long-hint  : |
-            A name for the ten reads returned.
+            Family name
 
 description : |
-    <p> Take the top ten reads from a Single End reads object.</p>
+    <p>Computes the files necessary for creating an SSN from a protein family.</p>

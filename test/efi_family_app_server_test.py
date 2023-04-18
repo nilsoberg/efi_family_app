@@ -2,6 +2,7 @@
 import os
 import time
 import unittest
+import collections.abc
 from configparser import ConfigParser
 
 from efi_family_app.efi_family_appImpl import efi_family_app
@@ -83,7 +84,22 @@ class efi_family_appTest(unittest.TestCase):
             },
         )
 
-        self.assertEqual(1, 1, "Fail")
+        self.assertTrue(ret != None, "No report returned")
+        self.assertTrue(isinstance(ret, list), "Report should be a list")
+        self.assertTrue(len(ret) > 0, "Report must have at least one element")
+
+        shared_dir = ret[0]["shared_folder"]
+        self.assertTrue(os.path.exists(shared_dir), "Shared directory " + shared_dir + " does not exist.")
+
+        job_dir = os.path.join(shared_dir, "job_temp", "output")
+        report_dir = os.path.join(shared_dir, "reports")
+        comp_results_file = os.path.join(job_dir, "1.out")
+        output_image = os.path.join(report_dir, "length_histogram_uniprot.png")
+
+        self.assertTrue(os.path.exists(job_dir), "Job output directory " + job_dir + " does not exist.")
+        self.assertTrue(os.path.exists(report_dir), "Report output directory " + job_dir + " does not exist.")
+        self.assertTrue(os.path.isfile(comp_results_file), "Computation failed; results file " + comp_results_file + " does not exist.")
+        self.assertTrue(os.path.isfile(output_image), "No output image " + output_image + " was found in report dir")
 
         # next steps:
         # - download report

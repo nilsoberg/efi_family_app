@@ -68,9 +68,9 @@ class EstJob(Core):
         else:
             return None
 
-        print("### OUTPUT FROM CREATE JOB ####################################################################################\n")
-        print(str(stdout) + "\n---------\n")
-        print(str(stderr) + "\n")
+        #print("### OUTPUT FROM CREATE JOB ####################################################################################\n")
+        #print(str(stdout) + "\n---------\n")
+        #print(str(stderr) + "\n")
 
         self.script_file = script_file
 
@@ -94,9 +94,9 @@ class EstJob(Core):
 
         stdout, stderr = get_streams(process)
 
-        print("### OUTPUT FROM GENERATE ######################################################################################\n")
-        print(str(stdout) + "\n---------\n")
-        print(str(stderr) + "\n")
+        #print("### OUTPUT FROM GENERATE ######################################################################################\n")
+        #print(str(stdout) + "\n---------\n")
+        #print(str(stderr) + "\n")
 
         return True
 
@@ -126,9 +126,12 @@ class EstJob(Core):
         alignment_length_out = os.path.join(reports_path, alignment_length)
         percent_identity_out = os.path.join(reports_path, percent_identity)
 
-        length_histogram_rel = os.path.join("reports", length_histogram)
-        alignment_length_rel = os.path.join("reports", alignment_length)
-        percent_identity_rel = os.path.join("reports", percent_identity)
+        #length_histogram_rel = os.path.join("reports", length_histogram)
+        #alignment_length_rel = os.path.join("reports", alignment_length)
+        #percent_identity_rel = os.path.join("reports", percent_identity)
+        length_histogram_rel = length_histogram
+        alignment_length_rel = alignment_length
+        percent_identity_rel = percent_identity
 
         #print(os.listdir(self.output_dir + "/output"))
 
@@ -151,6 +154,7 @@ class EstJob(Core):
         )
         
         output_report = self.create_report_from_template(template_path, config)
+        output_report["shared_folder"] = self.shared_folder
         print("OUTPUT REPORT\n")
         print(str(output_report) + "\n")
         return output_report
