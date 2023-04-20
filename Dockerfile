@@ -108,6 +108,8 @@ RUN add-apt-repository -y ppa:c2d4u.team/c2d4u4.0+
 RUN apt-get update
 RUN apt-get install -y r-cran-hmisc
 
+ARG DATADIR=/data/efi/0.2.1
+RUN mkdir -p $DATADIR
 
 ### This is for KBase integration.  It can be commented out to run the EFI family app in standalone mode.
 WORKDIR /kb/module
@@ -120,7 +122,6 @@ COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
 RUN chmod -R a+rw /kb/module
 RUN make all
-RUN mkdir -p /data/efi/0.1
 
 
 # Configure EFI apps
@@ -144,8 +145,8 @@ RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/env_conf.sh EFI_SHARED
 RUN cp /apps/shortbred/ShortBRED/env_conf.sh.example /apps/shortbred/ShortBRED/env_conf.sh
 RUN perl /apps/EFIShared/edit_env_conf.pl /apps/shortbred/ShortBRED/env_conf.sh SHORTBRED_APP_HOME=/apps/shortbred/sb_code SHORTBRED_DATA_HOME=/apps/shortbred/sb_data EFI_SHORTBRED_HOME=/apps/shortbred/ShortBRED
 RUN cp /apps/EFIShared/db_conf.sh.example /apps/EFIShared/db_conf.sh
-RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=/data/efi/0.1/seq_mapping.sqlite EFI_DB=/data/efi/0.1/metadata.sqlite EFI_DB_DIR=/data/efi/0.1/blastdb EFI_DIAMOND_DB_DIR=/data/efi/0.1/diamonddb EFI_FASTA_PATH=/data/efi/0.1/uniprot.fasta
-#RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=/kb/module/data/efi/0.1/seq_mapping.sqlite EFI_DB=/kb/module/data/efi/0.1/metadata.sqlite EFI_DB_DIR=/kb/module/data/efi/0.1/blastdb EFI_DIAMOND_DB_DIR=/kb/module/data/efi/0.1/diamonddb EFI_FASTA_PATH=/kb/module/data/efi/0.1/uniprot.fasta
+RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=$DATADIR/seq_mapping.sqlite EFI_DB=$DATADIR/metadata.sqlite EFI_DB_DIR=$DATADIR/blastdb EFI_DIAMOND_DB_DIR=$DATADIR/diamonddb EFI_FASTA_PATH=$DATADIR/uniprot.fasta
+#RUN perl /apps/EFIShared/edit_env_conf.pl /apps/EFIShared/db_conf.sh EFI_SEQ_DB=/kb/module$DATADIR/seq_mapping.sqlite EFI_DB=/kb/module$DATADIR/metadata.sqlite EFI_DB_DIR=/kb/module$DATADIR/blastdb EFI_DIAMOND_DB_DIR=/kb/module$DATADIR/diamonddb EFI_FASTA_PATH=/kb/module$DATADIR/uniprot.fasta
 
 # This is for unit testing
 ARG TESTPATH=/kb/module/data/unit_test/0.1

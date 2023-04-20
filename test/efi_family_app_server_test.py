@@ -85,6 +85,8 @@ class efi_family_appTest(unittest.TestCase):
             },
         )
 
+        print("Show STDOUT\n")
+
         self.assertTrue(ret != None, "No report returned")
         self.assertTrue(isinstance(ret, list), "Report should be a list")
         self.assertTrue(len(ret) > 0, "Report must have at least one element")

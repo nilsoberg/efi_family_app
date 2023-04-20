@@ -68,9 +68,10 @@ class EstJob(Core):
         else:
             return None
 
-        #print("### OUTPUT FROM CREATE JOB ####################################################################################\n")
-        #print(str(stdout) + "\n---------\n")
-        #print(str(stderr) + "\n")
+        print("### OUTPUT FROM CREATE JOB ####################################################################################\n")
+        print(str(stdout) + "\n---------\n")
+        print("### ERR\n")
+        print(str(stderr) + "\n")
 
         self.script_file = script_file
 
@@ -94,9 +95,10 @@ class EstJob(Core):
 
         stdout, stderr = get_streams(process)
 
-        #print("### OUTPUT FROM GENERATE ######################################################################################\n")
-        #print(str(stdout) + "\n---------\n")
-        #print(str(stderr) + "\n")
+        print("### OUTPUT FROM GENERATE ######################################################################################\n")
+        print(str(stdout) + "\n---------\n")
+        print("### ERR\n")
+        print(str(stderr) + "\n")
 
         return True
 
@@ -133,7 +135,8 @@ class EstJob(Core):
         alignment_length_rel = alignment_length
         percent_identity_rel = percent_identity
 
-        #print(os.listdir(self.output_dir + "/output"))
+        print(os.listdir(self.output_dir + "/output"))
+        print(length_histogram_src + " --> " + length_histogram_out)
 
         shutil.copyfile(length_histogram_src, length_histogram_out)
         shutil.copyfile(alignment_length_src, alignment_length_out)

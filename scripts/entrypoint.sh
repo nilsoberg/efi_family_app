@@ -21,10 +21,11 @@ elif [ "${1}" = "init" ] ; then
   efi_url=https://efi.igb.illinois.edu/downloads/databases/20230301_swissprot
   # This should point to a persistent directory that is mounted to the docker path
   if [ "${2}" = "" ]; then
-      data_dir="/data/efi/0.1"
+      data_dir="/data/efi/0.2.1"
   else
       data_dir=$2
   fi
+  mkdir -p $data_dir
   curl -ksL $efi_url/blastdb.zip > $data_dir/blastdb.zip
   curl -ksL $efi_url/diamonddb.zip > $data_dir/diamonddb.zip
   curl -ksL $efi_url/uniprot.fasta.zip > $data_dir/uniprot.fasta.zip
@@ -36,7 +37,7 @@ elif [ "${1}" = "init" ] ; then
   unzip -o $data_dir/seq_mapping.sqlite.zip -d $data_dir
   unzip -o $data_dir/metadata.sqlite.zip -d $data_dir
   rm $data_dir/*.zip
-  touch $data_dir/__READY__
+  touch /data/__READY__
 elif [ "${1}" = "bash" ] ; then
   bash
 elif [ "${1}" = "report" ] ; then
