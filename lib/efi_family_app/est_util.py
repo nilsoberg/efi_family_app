@@ -41,13 +41,15 @@ class EstJob(Core):
 
 
 
-    def create_job(self, params: dict):
+    def create_job(self, params):
 
         create_job_pl = os.path.join(self.est_dir, 'create_job.pl')
 
         process_args = [create_job_pl, '--job-dir', self.output_dir]
         if params.get('job_id') != None:
             process_args.extend(['--job-id', params['job_id']])
+
+        print(params)
 
         process_params = {'type': 'generate'}
         if params.get('family') != None:

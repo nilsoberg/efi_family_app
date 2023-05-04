@@ -67,15 +67,20 @@ class efi_family_app:
 
         #TODO: make this a config variable
         config['est_home'] = '/apps/EST'
-        create_args = {'family': params['family_name']}
+        #create_args = {'family': params['family_name']}
 
         db_conf = params.get('efi_db_config')
         if db_conf != None:
             config['efi_db_config'] = db_conf
 
+        print(params)
+        raise ValueError('finish test')
+
+        # return the results
+
         job = EstJob(ctx, config)
 
-        job.create_job(create_args)
+        job.create_job(params)
 
         job.start_job()
 

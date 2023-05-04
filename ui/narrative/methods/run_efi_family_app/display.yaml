@@ -13,24 +13,82 @@ icon: icon.png
 #
 # define a set of similar apps that might be useful to the user
 #
-suggestions:
-    apps:
-        related:
-            [app1, app2]
-        next:
-            [app3, app4]
+#suggestions:
+#    apps:
+#        related:
+#            [app1, app2]
+#        next:
+#            [app3, app4]
 
 #
 # Configure the display and description of parameters
 #
 parameters :
+    job_name :
+        ui-name : |
+            Job name
+        short-hint : |
+            The name of the output dataset
+        long-hint : |
+            The name of the output dataset
     family_name :
         ui-name : |
             Family name
         short-hint : |
-            Family name
+            One or more InterPro and UniProt families, space-separated
         long-hint  : |
-            Family name
+            InterPro and UniProt families define sets of related proteins. This app can take one or more family names separated by spaces
+    use_uniref :
+        ui-name : |
+            UniRef type
+        short-hint : |
+            UniRef reduces family size by 50% and 90% seqeuence similarity
+        long-hit : |
+            UniRef reduces family size by protein sequence similarity. UniRef50 is 50% identity over 80% of the length of the sequence, and UniRef90 is 90% identity over 80% of the length of the sequence.
+    blast_sequence :
+        ui-name : |
+            Protein sequence
+        short-hint : |
+            Protein sequence used in BLAST
+        long-hint : |
+            Protein sequence used in BLAST. Retrieves sequences similar to the input sequence.
+    fasta_text : 
+        ui-name : |
+            FASTA sequences
+        short-hint : |
+            Protein sequences in FASTA format
+        long-hint : |
+            Protein sequences in FASTA format. These are used in the BLAST to determine similarity, and allow custom sequences to be utilized.
+    accession_text :
+        ui-name : |
+            Accession IDs
+        short-hint : |
+            UniProt and/or NCBI protein accession IDs
+        long-hint : |
+            A list of UniProt and/or NCBI protein accession IDs. Sequences from these IDs are retrieved to determine similarity.
+
+parameter-groups :
+    option_blast :
+        ui-name : |
+            BLAST
+        short-hint : |
+            The EFI-EST BLAST option
+    option_family :
+        ui-name : |
+            Families
+        short-hint : |
+            The EFI-EST Families option
+    option_fasta :
+        ui-name : |
+            FASTA
+        short-hint : |
+            The EFI-EST FASTA option
+    option_accession :
+        ui-name : |
+            Accession IDs
+        short-hint : |
+            The EFI-EST Accession IDs option
+
 
 description : |
     <p>Computes the files necessary for creating an SSN from a protein family.</p>

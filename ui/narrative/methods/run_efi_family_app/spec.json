@@ -1,5 +1,5 @@
 {
-    "ver": "0.1.1",
+    "ver": "0.1.4",
     "authors": [
         "nilsoberg"
     ],
@@ -11,12 +11,120 @@
     },
     "parameters": [
         {
-            "id": "family_name",
+            "id": "job_name",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "text"
+        },
+        {
+            "id": "family_name",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text"
+        },
+        {
+            "id": "use_uniref",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": ["none"],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "id": "none",
+                        "display": "None",
+                        "ui_name": "None",
+                        "value": "none"
+                    },
+                    {
+                        "id": "uniref90",
+                        "display": "UniRef90",
+                        "ui_name": "UniRef90",
+                        "value": "uniref90"
+                    },
+                    {
+                        "id": "uniref50",
+                        "display": "UniRef50",
+                        "ui_name": "UniRef50",
+                        "value": "uniref50"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "blast_sequence",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "textarea",
+            "n_rows": 10
+        },
+        {
+            "id": "fasta_text",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "textarea",
+            "n_rows": 10
+        },
+        {
+            "id": "accession_text",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "textarea",
+            "n_rows": 10
+        }
+    ],
+	"parameter-groups": [
+		{
+            "id": "option_blast",
+            "parameters": [
+                "blast_sequence"
+            ],
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": true,
+            "with_border": true
+        },
+        {
+            "id": "option_family",
+            "parameters": [
+                "family_name",
+                "use_uniref"
+            ],
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": true,
+            "with_border": true
+        },
+        {
+            "id": "option_fasta",
+            "parameters": [
+                "fasta_text"
+            ],
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": true,
+            "with_border": true
+        },
+        {
+            "id": "option_accession",
+            "parameters": [
+                "accession_text"
+            ],
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": true,
+            "with_border": true
         }
     ],
     "behavior": {
@@ -28,21 +136,44 @@
                 {
                     "narrative_system_variable": "workspace",
                     "target_property": "workspace_name"
-                },{
+                },
+                {
                     "narrative_system_variable": "workspace_id",
                     "target_property": "workspace_id"
-                },{
-                    "input_parameter": "family_name",
-                    "target_property": "family_name"
+                },
+                {
+                    "input_parameter": "job_name",
+                    "target_property": "job_name"
+                },
+                {
+                    "input_parameter": "option_blast",
+                    "target_property": "option_blast"
+                },
+                {
+                    "input_parameter": "option_family",
+                    "target_property": "option_family"
+                },
+                {
+                    "input_parameter": "option_fasta",
+                    "target_property": "option_fasta"
+                },
+                {
+                    "input_parameter": "option_accession",
+                    "target_property": "option_accession"
                 }
             ],
             "output_mapping": [
                 {
                     "service_method_output_path": [0,"report_name"],
                     "target_property": "report_name"
-                },{
+                },
+                {
                     "service_method_output_path": [0,"report_ref"],
                     "target_property": "report_ref"
+                },
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
                 }
             ]
         }
