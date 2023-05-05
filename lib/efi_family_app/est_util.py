@@ -91,23 +91,23 @@ class EstJob(Core):
     def get_blast_params(self, params, process_params):
         if params.get('option_blast') != None:
             process_params['type'] = 'blast'
-            process_params['seq'] = params['option_blast'][0]['blast_sequence']
+            process_params['seq'] = params['option_blast']['blast_sequence']
     def get_family_params(self, params, process_params):
         if params.get('option_family') != None:
             process_params['type'] = 'family'
-            process_params['family'] = params['option_family'][0]['fam_family_name']
-            process_params['uniref'] = params['option_family'][0]['fam_use_uniref']
+            process_params['family'] = params['option_family']['fam_family_name']
+            process_params['uniref'] = params['option_family']['fam_use_uniref']
     def get_fasta_params(self, params, process_params):
         if params.get('option_fasta') != None:
             process_params['type'] = 'fasta'
-            fasta_text = params['option_fasta'][0]['fasta_seq_input_text']
+            fasta_text = params['option_fasta']['fasta_seq_input_text']
     def get_accession_params(self, params, process_params):
         if params.get('option_accession') != None:
             process_params['type'] = 'acc'
-            acc_id_text = params['option_accession'][0]['acc_input_text']
+            acc_id_text = params['option_accession']['acc_input_text']
     def check_optional_params(self, params, process_params):
         for x in ['option_blast', 'option_family', 'option_fasta', 'option_accession']:
-            if params.get(x) != None and len(params[x]) > 0 and params[x][0].get('exclude_fragments') != None and (params[x][0]['exclude_fragments'] == True or params[x][0]['exclude_fragments'] == "true"):
+            if params.get(x) != None and params[x].get('exclude_fragments') != None and params[x]['exclude_fragments'] == 1:
                 process_params['exclude_fragments'] = True
 
 
