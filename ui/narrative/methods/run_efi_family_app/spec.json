@@ -1,5 +1,5 @@
 {
-    "ver": "0.1.4",
+    "ver": "0.1.6",
     "authors": [
         "nilsoberg"
     ],
@@ -19,7 +19,7 @@
             "field_type": "text"
         },
         {
-            "id": "family_name",
+            "id": "fam_family_name",
             "optional": true,
             "advanced": false,
             "allow_multiple": false,
@@ -27,7 +27,7 @@
             "field_type": "text"
         },
         {
-            "id": "use_uniref",
+            "id": "fam_use_uniref",
             "optional": true,
             "advanced": false,
             "allow_multiple": false,
@@ -66,7 +66,7 @@
             "n_rows": 10
         },
         {
-            "id": "fasta_text",
+            "id": "fasta_seq_input_text",
             "optional": true,
             "advanced": false,
             "allow_multiple": false,
@@ -75,55 +75,107 @@
             "n_rows": 10
         },
         {
-            "id": "accession_text",
+            "id": "acc_id_input_text",
             "optional": true,
             "advanced": false,
             "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "textarea",
             "n_rows": 10
+        },
+        {
+            "id": "blast_exclude_fragments",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "checkbox",
+            "checkbox_options": {
+                "unchecked_value": 0,
+                "checked_value": 1
+            }
+        },
+        {
+            "id": "fam_exclude_fragments",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "checkbox",
+            "checkbox_options": {
+                "unchecked_value": 0,
+                "checked_value": 1
+            }
+        },
+        {
+            "id": "fasta_exclude_fragments",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "checkbox",
+            "checkbox_options": {
+                "unchecked_value": 0,
+                "checked_value": 1
+            }
+        },
+        {
+            "id": "acc_exclude_fragments",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "checkbox",
+            "checkbox_options": {
+                "unchecked_value": 0,
+                "checked_value": 1
+            }
         }
     ],
 	"parameter-groups": [
 		{
             "id": "option_blast",
             "parameters": [
-                "blast_sequence"
+                "blast_sequence",
+                "blast_exclude_fragments"
             ],
             "optional": true,
             "advanced": false,
-            "allow_multiple": true,
+            "allow_multiple": false,
             "with_border": true
         },
         {
             "id": "option_family",
             "parameters": [
-                "family_name",
-                "use_uniref"
+                "fam_family_name",
+                "fam_use_uniref",
+                "fam_exclude_fragments"
             ],
             "optional": true,
             "advanced": false,
-            "allow_multiple": true,
+            "allow_multiple": false,
             "with_border": true
         },
         {
             "id": "option_fasta",
             "parameters": [
-                "fasta_text"
+                "fasta_seq_input_text",
+                "fasta_exclude_fragments"
             ],
             "optional": true,
             "advanced": false,
-            "allow_multiple": true,
+            "allow_multiple": false,
             "with_border": true
         },
         {
             "id": "option_accession",
             "parameters": [
-                "accession_text"
+                "acc_id_input_text",
+                "acc_exclude_fragments"
             ],
             "optional": true,
             "advanced": false,
-            "allow_multiple": true,
+            "allow_multiple": false,
             "with_border": true
         }
     ],

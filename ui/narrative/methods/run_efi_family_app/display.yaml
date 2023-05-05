@@ -1,10 +1,10 @@
 #
 # define display information
 #
-name: EFI Family Demo App
+name: EFI-EST Demo App
 
 tooltip: |
-    Test a core feature of the EFI apps.
+    Test four modes of the EFI-EST tools.
 
 screenshots: []
 
@@ -31,20 +31,29 @@ parameters :
             The name of the output dataset
         long-hint : |
             The name of the output dataset
-    family_name :
+
+    fam_family_name :
         ui-name : |
             Family name
         short-hint : |
             One or more InterPro and UniProt families, space-separated
         long-hint  : |
             InterPro and UniProt families define sets of related proteins. This app can take one or more family names separated by spaces
-    use_uniref :
+    fam_use_uniref :
         ui-name : |
             UniRef type
         short-hint : |
             UniRef reduces family size by 50% and 90% seqeuence similarity
         long-hit : |
             UniRef reduces family size by protein sequence similarity. UniRef50 is 50% identity over 80% of the length of the sequence, and UniRef90 is 90% identity over 80% of the length of the sequence.
+    fam_exclude_fragments :
+        ui-name : |
+            Exclude Fragments
+        short-hint : |
+            Excludes fragment sequences if selected.
+        long-hint : |
+            'UniProt designates a Sequence Status for each member: Complete if the encoding DNA sequence has both start and stop codons; Fragment if the start and/or stop codon is missing. Approximately 10% of the entries in UniProt are fragments. For the UniRef90 and UniRef50 databases, clusters are excluded if the cluster ID ("representative sequence") is a fragment. UniProt IDs in UniRef90 and UniRef50 clusters with complete cluster IDs are removed from the clusters if they are fragments.'
+
     blast_sequence :
         ui-name : |
             Protein sequence
@@ -52,20 +61,43 @@ parameters :
             Protein sequence used in BLAST
         long-hint : |
             Protein sequence used in BLAST. Retrieves sequences similar to the input sequence.
-    fasta_text : 
+    blast_exclude_fragments :
+        ui-name : |
+            Exclude Fragments
+        short-hint : |
+            Excludes fragment sequences if selected.
+        long-hint : |
+            'UniProt designates a Sequence Status for each member: Complete if the encoding DNA sequence has both start and stop codons; Fragment if the start and/or stop codon is missing. Approximately 10% of the entries in UniProt are fragments. For the UniRef90 and UniRef50 databases, clusters are excluded if the cluster ID ("representative sequence") is a fragment. UniProt IDs in UniRef90 and UniRef50 clusters with complete cluster IDs are removed from the clusters if they are fragments.'
+
+    fasta_seq_input_text : 
         ui-name : |
             FASTA sequences
         short-hint : |
             Protein sequences in FASTA format
         long-hint : |
             Protein sequences in FASTA format. These are used in the BLAST to determine similarity, and allow custom sequences to be utilized.
-    accession_text :
+    fasta_exclude_fragments :
+        ui-name : |
+            Exclude Fragments
+        short-hint : |
+            Excludes fragment sequences if selected.
+        long-hint : |
+            'UniProt designates a Sequence Status for each member: Complete if the encoding DNA sequence has both start and stop codons; Fragment if the start and/or stop codon is missing. Approximately 10% of the entries in UniProt are fragments. For the UniRef90 and UniRef50 databases, clusters are excluded if the cluster ID ("representative sequence") is a fragment. UniProt IDs in UniRef90 and UniRef50 clusters with complete cluster IDs are removed from the clusters if they are fragments.'
+
+    acc_id_input_text :
         ui-name : |
             Accession IDs
         short-hint : |
             UniProt and/or NCBI protein accession IDs
         long-hint : |
             A list of UniProt and/or NCBI protein accession IDs. Sequences from these IDs are retrieved to determine similarity.
+    acc_exclude_fragments :
+        ui-name : |
+            Exclude Fragments
+        short-hint : |
+            Excludes fragment sequences if selected.
+        long-hint : |
+            'UniProt designates a Sequence Status for each member: Complete if the encoding DNA sequence has both start and stop codons; Fragment if the start and/or stop codon is missing. Approximately 10% of the entries in UniProt are fragments. For the UniRef90 and UniRef50 databases, clusters are excluded if the cluster ID ("representative sequence") is a fragment. UniProt IDs in UniRef90 and UniRef50 clusters with complete cluster IDs are removed from the clusters if they are fragments.'
 
 parameter-groups :
     option_blast :

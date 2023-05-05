@@ -73,9 +73,6 @@ class efi_family_app:
         if db_conf != None:
             config['efi_db_config'] = db_conf
 
-        print(params)
-        raise ValueError('finish test')
-
         # return the results
 
         job = EstJob(ctx, config)

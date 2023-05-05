@@ -79,7 +79,7 @@ class efi_family_appTest(unittest.TestCase):
                 "workspace_name": self.wsName,
                 "reads_ref": "70257/2/1",
                 "output_name": "EfiFamilyApp",
-                "family_name": test_family,
+                "option_family": [{"fam_family_name": test_family, "fam_use_uniref": "none"}],
                 "efi_db_config": db_conf,
                 #"est": args,
             },
