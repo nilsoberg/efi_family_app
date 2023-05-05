@@ -57,8 +57,6 @@ class EstJob(Core):
         self.get_fasta_params(params, process_params)
         self.get_accession_params(params, process_params)
 
-        self.check_optional_params(params, process_params)
-
         json_str = json.dumps(process_params)
 
         print("### JSON INPUT PARAMETERS TO create_job.pl ####################################################################\n")
@@ -92,23 +90,27 @@ class EstJob(Core):
         if params.get('option_blast') != None:
             process_params['type'] = 'blast'
             process_params['seq'] = params['option_blast']['blast_sequence']
+            if params['option_blast'].get('blast_exclude_fragments') and params['option_blast']['blast_exclude_fragments'] == 1:
+                process_params['exclude_fragments'] = 1
     def get_family_params(self, params, process_params):
         if params.get('option_family') != None:
             process_params['type'] = 'family'
             process_params['family'] = params['option_family']['fam_family_name']
             process_params['uniref'] = params['option_family']['fam_use_uniref']
+            if params['option_family'].get('fam_exclude_fragments') and params['option_family']['fam_exclude_fragments'] == 1:
+                process_params['exclude_fragments'] = 1
     def get_fasta_params(self, params, process_params):
         if params.get('option_fasta') != None:
             process_params['type'] = 'fasta'
             fasta_text = params['option_fasta']['fasta_seq_input_text']
+            if params['option_fasta'].get('fasta_exclude_fragments') and params['option_fasta']['fasta_exclude_fragments'] == 1:
+                process_params['exclude_fragments'] = 1
     def get_accession_params(self, params, process_params):
         if params.get('option_accession') != None:
             process_params['type'] = 'acc'
             acc_id_text = params['option_accession']['acc_input_text']
-    def check_optional_params(self, params, process_params):
-        for x in ['option_blast', 'option_family', 'option_fasta', 'option_accession']:
-            if params.get(x) != None and params[x].get('exclude_fragments') != None and params[x]['exclude_fragments'] == 1:
-                process_params['exclude_fragments'] = True
+            if params['option_accession'].get('acc_exclude_fragments') and params['option_accession']['acc_exclude_fragments'] == 1:
+                process_params['exclude_fragments'] = 1
 
 
     def start_job(self):
