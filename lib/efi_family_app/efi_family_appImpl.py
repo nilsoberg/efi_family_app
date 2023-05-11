@@ -7,7 +7,7 @@ from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.ReadsUtilsClient import ReadsUtils
 from base import Core
 
-from .est_util import EstJob
+from .est_util import EstGenerateJob
 
 
 #END_HEADER
@@ -40,9 +40,10 @@ class efi_family_app:
     def __init__(self, config):
         #BEGIN_CONSTRUCTOR
         self.callback_url = os.environ['SDK_CALLBACK_URL']
-        self.shared_folder = config['scratch']
-        logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
-                            level=logging.INFO)
+        self.shared_folder = config['scratch'] + "/job"
+        if not os.path.isdir(self.shared_folder):
+            os.mkdir(self.shared_folder)
+        logging.basicConfig(format='%(created)s %(levelname)s: %(message)s', level=logging.INFO)
         #END_CONSTRUCTOR
         pass
 
@@ -75,7 +76,7 @@ class efi_family_app:
 
         # return the results
 
-        job = EstJob(ctx, config)
+        job = EstGenerateJob(ctx, config)
 
         job.create_job(params)
 

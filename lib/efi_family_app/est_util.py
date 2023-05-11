@@ -9,7 +9,7 @@ import shutil
 
 # This is the SFA base package which provides the Core app class.
 from base import Core
-
+from installed_clients.DataFileUtilClient import DataFileUtil
 
 MODULE_DIR = "/kb/module"
 TEMPLATES_DIR = os.path.join(MODULE_DIR, "lib/templates")
@@ -23,12 +23,17 @@ def get_streams(process):
     return (stdout.decode("utf-8", "ignore"), stderr.decode("utf-8", "ignore"))
 
 
-class EstJob(Core):
+class EstGenerateJob(Core):
 
     def __init__(self, ctx, config, clients_class=None):
         super().__init__(ctx, config, clients_class)
         # self.shared_folder is defined in the Core App class.
         self.output_dir = os.path.join(self.shared_folder, 'job_temp')
+        self.ws_url = config['workspace-url']
+        self.callback_url = config['SDK_CALLBACK_URL']
+
+        self.dfu = DataFileUtil(self.callback_url)
+
         self._mkdir_p(self.output_dir)
         self.script_file = ''
         self.est_dir = config.get('est_home')
@@ -37,6 +42,7 @@ class EstJob(Core):
         if self.efi_db_config == None:
             self.efi_db_config = '/apps/EFIShared/db_conf.sh'
         #TODO: make a more robust way of doing this
+        self.
         self.est_env = ['/apps/EST/env_conf.sh', '/apps/EFIShared/env_conf.sh', '/apps/env.sh', '/apps/blast_legacy.sh', self.efi_db_config]
 
 
@@ -102,13 +108,32 @@ class EstJob(Core):
     def get_fasta_params(self, params, process_params):
         if params.get('option_fasta') != None:
             process_params['type'] = 'fasta'
-            fasta_text = params['option_fasta']['fasta_seq_input_text']
+            fasta_file_path = None
+            if params['option_fasta'].get('fasta_file') == None and params['option_fasta'].get('fasta_seq_input_text') != None:
+                #TODO: write text to a file
+                fasta_file_path = ''
+            elif params['option_fasta'].get('fasta_file') == None:
+                #TODO: make an error here
+
+            process_params['fasta_file'] = fasta_file_path
             if params['option_fasta'].get('fasta_exclude_fragments') and params['option_fasta']['fasta_exclude_fragments'] == 1:
                 process_params['exclude_fragments'] = 1
     def get_accession_params(self, params, process_params):
         if params.get('option_accession') != None:
             process_params['type'] = 'acc'
-            acc_id_text = params['option_accession']['acc_input_text']
+            id_list_file = None
+            if params['option_accession'].get('acc_input_file') == None and params['option_accession'].get('acc_input_list') != None:
+                id_list = params['option_accession'].get('acc_input_list')
+                #TODO: write this to a file
+                id_list_file = ''
+            elif params['option_accession'].get('acc_input_file') == None and params['option_accession'].get('acc_input_text') != None:
+                acc_id_text = params['option_accession']['acc_input_text']
+                #TODO: write this to a file
+                id_list_file = ''
+            elif params['option_accession'].get('acc_input_file') == None:
+                #TODO: make an error here
+
+            process_params['id_list_file'] = id_list_file
             if params['option_accession'].get('acc_exclude_fragments') and params['option_accession']['acc_exclude_fragments'] == 1:
                 process_params['exclude_fragments'] = 1
 
